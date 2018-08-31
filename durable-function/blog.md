@@ -181,5 +181,6 @@ To get more information on Durable Functions, here's some reading material.
 * [Learn how to orchestrate serverless function by scraping APIs in 8 minutes](https://blogs.msdn.microsoft.com/appserviceteam/2018/08/06/learn-how-to-orchestrate-serverless-functions-by-scraping-apis-in-8-minutes/?WT.mc_id=dotnet-blog-marouill)
 * [Durable Function Orchestrator Checkpoint and replay](https://docs.microsoft.com/azure/azure-functions/durable-functions-checkpointing-and-replay?WT.mc_id=dotnet-blog-marouill)
 
-[samplelink]: https://github.com/MaximRouiller/experimental_samples/ 
-<!--  https://github.com/Azure-Samples -->
+[samplelink]: https://aka.ms/DurableFunctionsSample
+<!-- https://github.com/MaximRouiller/experimental_samples/tree/master/durable-function  -->
+<!-- https://github.com/Azure-Samples/durablefunctions-apiscraping-dotnet-->
