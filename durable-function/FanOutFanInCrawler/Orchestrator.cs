@@ -48,7 +48,8 @@ namespace FanOutFanInCrawler
         public static async Task<string> RunOrchestrator(
             [OrchestrationTrigger] DurableOrchestrationContext context)
         {
-            var organizationName = context.GetInput<string>();
+            // retrieves the organization name from the Orchestrator_HttpStart function
+            var organizationName = context.GetInput<string>();            
             var repositories = await context.CallActivityAsync<List<(long id, string name)>>("GetAllRepositoriesForOrganization", organizationName);
 
             var tasks = new Task<(long id, int openedIssues, string name)>[repositories.Count];
