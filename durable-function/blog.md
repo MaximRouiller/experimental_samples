@@ -18,8 +18,6 @@ Let's get started.
 
 Beside the normal [serverless concepts](https://docs.microsoft.com/dotnet/standard/serverless-architecture/?WT.mc_id=dotnet-blog-marouill), Azure Durable Functions introduces more concepts that makes developing complex workflow easy.
 
-If you need to know what .NET Core is all about, we have [great tutorials](https://docs.microsoft.com/dotnet/core/tutorials/?WT.mc_id=dotnet-blog-marouill) to get you started.
-
 Let's start with the basic concepts and work our way up.
 
 ### Definition of a Function
