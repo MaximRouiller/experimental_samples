@@ -49,21 +49,29 @@ namespace FanOutFanInCrawler
             [OrchestrationTrigger] DurableOrchestrationContext context)
         {
             // retrieves the organization name from the Orchestrator_HttpStart function
-            var organizationName = context.GetInput<string>();            
+            var organizationName = context.GetInput<string>();
+            // retrieves the list of repositories for an organization by invoking a separate Activity Function.
             var repositories = await context.CallActivityAsync<List<(long id, string name)>>("GetAllRepositoriesForOrganization", organizationName);
 
+            // Creates an array of task to store the result of each functions
             var tasks = new Task<(long id, int openedIssues, string name)>[repositories.Count];
             for (int i = 0; i < repositories.Count; i++)
             {
+                // Starting a `GetOpenedIssues` activity WITHOUT `async`
+                // This will starts Activity Functions in parallel instead of sequentially.
                 tasks[i] = context.CallActivityAsync<(long, int, string)>("GetOpenedIssues", (repositories[i]));
             }
+
+            // Wait for all Activity Functions to complete execution
             await Task.WhenAll(tasks);
 
+            // Retrieve the result of each Activity Function and return them in a list
             var openedIssues = tasks.Select(x => x.Result).ToList();
+
+            // Send the list to an Activity Function to save them to Blob Storage.
             await context.CallActivityAsync("SaveRepositories", openedIssues);
 
             return context.InstanceId;
-
         }
 
         [FunctionName("GetAllRepositoriesForOrganization")]
