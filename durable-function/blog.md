@@ -129,7 +129,23 @@ An activity is part of the checkpoint and replay pattern described previously. A
 
 An activity is the perfect place to have code accessing a database, sending emails, or any other external systems. Activities that have been called and returned will have their results saved. This means that returning 1000 rows from a database won't be done multiple times but only a single time.
 
-This gives us a lot of leverage while orchestrating complex workflows. First, it allows us to keep the list of data on which we operate static. Second, since the orchestrator may call that function multiple times, it's important to have the result cache to avoid crashing external systems. Finally, it becomes possible to debug what was sent/returned by activities since everything that is done is logged by the Durable Functions component.
+As an example, our sample uses an activity function to retrieve the list of repositories from which we want to extract more data.
+
+```csharp
+[FunctionName("GetAllRepositoriesForOrganization")]
+public static async Task<List<(long id, string name)>> GetAllRepositoriesForOrganization([ActivityTrigger] DurableActivityContext context)
+{
+    // retrieves the organization name from the Orchestrator function
+    var organizationName = context.GetInput<string>();
+    // invoke the API to retrieve the list of repositories of a specific organization
+    var repositories = (await github.Repository.GetAllForOrg(organizationName)).Select(x => (x.Id, x.Name)).ToList();
+    return repositories;
+}
+```
+
+An Activity Function will never be re-executed for the same Orchestrator instance. In this scenario, we will preserve the list of repositories without invoking the API again.
+
+This gives us a lot of leverage while orchestrating complex workflows. First, it allows us to keep the list of data on which we operate static. Second, since the orchestrator may call that function multiple times, it's important to have the result cached to avoid crashing external systems. Finally, it becomes possible to debug what was sent/returned by activities since everything that is done is logged by the Durable Functions component.
 
 ### Code as orchestration
 

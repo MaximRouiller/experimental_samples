@@ -77,7 +77,9 @@ namespace FanOutFanInCrawler
         [FunctionName("GetAllRepositoriesForOrganization")]
         public static async Task<List<(long id, string name)>> GetAllRepositoriesForOrganization([ActivityTrigger] DurableActivityContext context)
         {
+            // retrieves the organization name from the Orchestrator function
             var organizationName = context.GetInput<string>();
+            // invoke the API to retrieve the list of repositories of a specific organization
             var repositories = (await github.Repository.GetAllForOrg(organizationName)).Select(x => (x.Id, x.Name)).ToList();
             return repositories;
         }
@@ -85,29 +87,41 @@ namespace FanOutFanInCrawler
         [FunctionName("GetOpenedIssues")]
         public static async Task<(long id, int openedIssues, string name)> GetOpenedIssues([ActivityTrigger] DurableActivityContext context)
         {
+            // retrieve a tuple of repositoryId and repository name from the Orchestrator function
             var parameters = context.GetInput<(long id, string name)>();
+            
+            // retrieves a list of issues from a specific repository
             var issues = (await github.Issue.GetAllForRepository(parameters.id)).ToList();
 
+            // returns a tuple of the count of opened issues for a specific repository
             return (parameters.id, issues.Count(x => x.State == ItemState.Open), parameters.name);
         }
 
         [FunctionName("SaveRepositories")]
         public static async Task SaveRepositories([ActivityTrigger] DurableActivityContext context)
         {
+            // retrieves a tuple from the Orchestrator function
             var parameters = context.GetInput<List<(long id, int openedIssues, string name)>>();
+
+            // create the client and table reference for Blob Storage
             var client = account.CreateCloudTableClient();
             var table = client.GetTableReference("Repositories");
+
+            // create the table if it doesn't exist already.
             await table.CreateIfNotExistsAsync();
 
+            // creates a batch of operation to be executed
             var batchOperation = new TableBatchOperation();
             foreach (var parameter in parameters)
             {
+                // Creates an operation to add the repository to Table Storage
                 batchOperation.Add(TableOperation.InsertOrMerge(new Repository(parameter.id)
                 {
                     OpenedIssues = parameter.openedIssues,
                     RepositoryName = parameter.name
                 }));
             }
+
             await table.ExecuteBatchAsync(batchOperation);
         }
 
