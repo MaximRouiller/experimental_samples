@@ -6,7 +6,7 @@ Azure Durable Functions is a new programming model based on Microsoft serverless
 
 Initially, I wanted to index data from GitHub repositories. I explained it all in a [previous post](https://blogs.msdn.microsoft.com/appserviceteam/2018/08/06/learn-how-to-orchestrate-serverless-functions-by-scraping-apis-in-8-minutes/?WT.mc_id=dotnet-blog-marouill), but I'll drill down into the concepts today.
 
-To summarize the post, I wanted to retrieve a list of repositories that I wanted to index. Then, query each repositories for more detailed information. Finally, save the data into a database.
+To summarize the post, I wanted to retrieve a list of repositories that I wanted to index. Then, query each repository for more detailed information. Finally, save the data into a database.
 
 Today, we'll do something similar but to keep things simple, I'll save the content to Azure Blob Storage.
 
