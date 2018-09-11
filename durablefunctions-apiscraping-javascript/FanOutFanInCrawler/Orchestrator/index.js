@@ -1,6 +1,7 @@
 const df = require("durable-functions");
 
 module.exports = df(function* (context) {
+    console.log('Orchestrator');
     var organizationName = context.df.getInput();
 
     var repositories = yield context.df.callActivityAsync("GetAllRepositoriesForOrganization", organizationName);
