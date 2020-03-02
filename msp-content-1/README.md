@@ -4,8 +4,9 @@
 
 ## Session Abstract
 
-TODO
-<!-- write abstract here -->
+We are in a cloud world. There are so many options on how to do deploy something on Azure that it can be confusing. In this session, we're going to walk through one of the simplest scenario on how to get something in the cloud the right way. We're going to go through together on how to host a NodeJS API on Azure with GitHub Actions. 
+
+After this session, you will be able to create an API, create the Azure resource's, and automatically deploy that application to work with teammates. 
 
 ## Table of Content
 
